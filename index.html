@@ -2,50 +2,817 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>21是🔥货~</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灰冰名片</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
 body{
-  background:#000;
-  font-family:system-ui,sans-serif;
-  font-weight:bold;
-  overflow-x:hidden;
-  padding:10px;
+  background:#fff;color:#222;
+  padding:20px;
+  display:flex;justify-content:center;align-items:center;
+  min-height:100vh;
 }
-.text{
-  font-size:22px;
-  white-space:nowrap;
-  margin:2px 0;
+@media(prefers-color-scheme:dark){
+  body{background:#121118;color:#eee}
 }
+
+.lang-switch {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 99999;
+  display: flex;
+  gap: 10px;
+}
+.lang-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+.lang-btn:hover {
+  transform: scale(1.1);
+}
+.btn-cn { background: #2563eb; }
+.lang-btn.active { box-shadow: 0 0 0 2px #fff, 0 0 10px #2563eb; }
+.btn-tw { background: #10b981; }
+.btn-en { background: #f59e0b; }
+
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+@media(prefers-color-scheme:dark){
+  #loader {background: #121118;}
+}
+
+.progress-bar {
+  width: 80%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+@media(prefers-color-scheme:dark){
+  .progress-bar {background: #333;}
+}
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #33ff00, #0099ff, #6633ff);
+  background-size: 400% 100%;
+  animation: 
+    loadProgress 1.5s ease-out forwards,
+    gradientLoop 3s linear infinite;
+}
+@keyframes loadProgress {
+  0% {width: 0;}
+  100% {width: 100%;}
+}
+@keyframes gradientLoop {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 400% 50%; }
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+@media(prefers-color-scheme:dark){
+  .loading-text {color: #aaa;}
+}
+
+#donePopup {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: showPopup 0.5s ease-out 1.5s forwards;
+}
+@media(prefers-color-scheme:dark){
+  #donePopup {background: #1e1e2f; color: #fff;}
+}
+@keyframes showPopup {
+  to {opacity: 1; transform: translateY(0);}
+}
+.done-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.done-desc {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+@media(prefers-color-scheme:dark){
+  .done-desc {color: #aaa;}
+}
+
+#startBtn {
+  padding: 10px 20px;
+  background: #07c160;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+#startBtn:hover {
+  background: #06ad56;
+}
+
+#wifiSignal {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  opacity: 0;
+  z-index: 10000;
+  animation: wifiShow 0.5s ease-out 1.5s forwards;
+}
+.wifi-bar {
+  background: #07c160;
+  border-radius: 2px 2px 0 0;
+  width: 4px;
+  transform: scaleY(0);
+}
+.wifi-bar:nth-child(1) {
+  height: 8px;
+  animation: wifiGrow 0.3s ease-out 1.6s forwards;
+}
+.wifi-bar:nth-child(2) {
+  height: 12px;
+  animation: wifiGrow 0.3s ease-out 1.7s forwards;
+}
+.wifi-bar:nth-child(3) {
+  height: 16px;
+  animation: wifiGrow 0.3s ease-out 1.8s forwards;
+}
+.wifi-bar:nth-child(4) {
+  height: 20px;
+  animation: wifiGrow 0.3s ease-out 1.9s forwards;
+}
+@keyframes wifiShow {
+  to {opacity: 1;}
+}
+@keyframes wifiGrow {
+  from {transform: scaleY(0);}
+  to {transform: scaleY(1);}
+}
+
+.card {
+  max-width: 600px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 30px;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+.card.show {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(20px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card.secret-mode {
+  background: #3a1018;
+  color: #ffb3b3;
+}
+.card.secret-mode .label {
+  color: #ff9999;
+}
+.card.secret-mode .title {
+  color: #ffcccc;
+}
+
+.name {
+  font-size: 42px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(129, 140, 248, 0.5), 0 0 20px rgba(129, 140, 248, 0.3);
+  background-size: 300% 100%;
+  animation: nameFlow 6s linear infinite;
+  position: relative;
+  display: inline-block;
+}
+@keyframes nameFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+.name::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4, #8b5cf6);
+  border-radius: 3px;
+}
+.name:hover {
+  transform: scale(1.05);
+}
+
+.title {
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 20px;
+}
+@media(prefers-color-scheme:dark){
+  .title {color: #ddd;}
+}
+.item {
+  margin: 16px 0;
+}
+.label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+@media(prefers-color-scheme:dark){
+  .label {color: #aaa;}
+}
+.info {
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.intro-box {
+  background: linear-gradient(135deg, #fffdee 0%, #fff8e8 100%);
+  border: 1px solid #ffd700;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 14px 0;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
+}
+@media(prefers-color-scheme:dark) {
+  .intro-box {
+    background: linear-gradient(135deg, #221f10 0%, #1c1a10 100%);
+    border-color: #ccaa00;
+  }
+}
+.intro-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #cc8800;
+  margin-bottom: 8px;
+}
+@media(prefers-color-scheme:dark) {
+  .intro-title { color: #ffdd55; }
+}
+.intro-text {
+  line-height: 1.7;
+  font-size: 15px;
+  color: #333;
+}
+@media(prefers-color-scheme:dark) {
+  .intro-text { color: #eee; }
+}
+
+@keyframes bounce {
+  0%,20%,50%,80%,100% {transform: translateY(0);}
+  40% {transform: translateY(-8px);}
+  60% {transform: translateY(-4px);}
+}
+@keyframes blink {
+  0%,100% { opacity:1; }
+  50% { opacity:0.7; }
+}
+
+.btn {
+  margin-top: 16px;
+  padding: 12px 24px;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+}
+
+.qq { background: #0066ff; animation: bounce 2s infinite, glow-blue 2s infinite alternate; }
+@keyframes glow-blue { from {box-shadow:0 0 5px #0066ff;} to {box-shadow:0 0 15px #0066ff;} }
+.qq:hover { background: #0052cc; }
+
+.douyin { background: #000; color: #fff; position: relative; overflow: hidden; animation: bounce 2s infinite 0.5s; }
+.douyin::before { content:''; position:absolute; inset:0; background:linear-gradient(45deg,#fe2c55,#25f4ee); opacity:0.9; z-index:-1; }
+
+.kuaishou { background: #ff7800; animation: bounce 2s infinite 1s, glow-orange 2s infinite alternate; }
+@keyframes glow-orange { from {box-shadow:0 0 5px #ff7800;} to {box-shadow:0 0 15px #ff7800;} }
+.kuaishou:hover { background: #e66a00; }
+
+.xiaohongshu { background: #ff2442; animation: bounce 2s infinite 0.9s, glow-red 2s infinite alternate; }
+@keyframes glow-red { from {box-shadow:0 0 5px #ff2442;} to {box-shadow:0 0 15px #ff2442;} }
+.xiaohongshu:hover { background: #e01f3a; }
+
+.wechat { background: #07c160; animation: bounce 2s infinite 0.7s, glow-green 2s infinite alternate; }
+@keyframes glow-green { from {box-shadow:0 0 5px #07c160;} to {box-shadow:0 0 15px #07c160;} }
+.wechat:hover { background: #06ad56; }
+
+.twitter { background: #000; color: #fff; animation: bounce 2s infinite, blink 1.2s infinite; }
+.twitter:hover { background: #222; }
+
+.fursuit { background: #ffd700; color: #000; animation: bounce 2s infinite 1.1s, glow-yellow 2s infinite alternate; }
+@keyframes glow-yellow { from {box-shadow:0 0 5px #ffd700;} to {box-shadow:0 0 15px #ffd700;} }
+.fursuit:hover { background: #e6c200; }
+
+/* Phigros 按钮样式：粉红色 */
+.phigros { background: #ff6699; animation: bounce 2s infinite 1.3s, glow-pink 2s infinite alternate; }
+@keyframes glow-pink { from {box-shadow:0 0 5px #ff6699;} to {box-shadow:0 0 15px #ff6699;} }
+.phigros:hover { background: #ff4d88; }
+
+.log-btn {
+  background: linear-gradient(90deg, #ffdd00, #ff3333, #33cc33, #3399ff);
+  background-size: 400% 100%;
+  animation: colorMove 6s linear infinite, bounce 2s infinite 1.2s;
+}
+@keyframes colorMove { 0%{background-position:0% 50%;}100%{background-position:400% 50%;} }
+
+#logPanel { position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; justify-content:center; align-items:center; z-index:99999; padding:20px; }
+.log-box { background:#fff; max-width:600px; width:100%; padding:30px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.3); max-height:80vh; overflow-y:auto; position:relative; }
+@media(prefers-color-scheme:dark){ .log-box{background:#1e1e2f;color:#fff;} }
+.close-log { margin-top:20px; padding:10px 20px; background:#0066ff; color:#fff; border:none; border-radius:8px; cursor:pointer; width:100%; font-weight:bold; }
+
+#easterBtn { position:absolute; top:12px; right:12px; width:26px; height:26px; border-radius:50%; background:#666; color:#fff; border:none; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:.6; }
+#easterBtn:hover { opacity:1; }
+
+#boomEaster { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); font-size:80px; z-index:9999999; display:none; animation:boomPop .6s ease-out forwards; }
+@keyframes boomPop { 0%{transform:translate(-50%,-50%) scale(0);opacity:1;}60%{transform:translate(-50%,-50%) scale(1.2);}100%{transform:translate(-50%,-50%) scale(1);opacity:1;} }
+
+#wechatModal { position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; justify-content:center; align-items:center; z-index:999999; padding:20px; }
+.wechat-card { background:#fff; max-width:320px; width:100%; padding:25px; border-radius:16px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.3); }
+@media(prefers-color-scheme:dark){ .wechat-card{background:#1e1e2f;color:#fff;} }
+.wx-id { font-size:18px; font-weight:bold; margin:15px 0; color:#07c160; }
+.copy-btn { padding:10px 20px; background:#07c160; color:#fff; border:none; border-radius:8px; cursor:pointer; width:100%; font-weight:bold; margin-bottom:10px; }
+.close-wechat { padding:10px 20px; background:#ccc; color:#333; border:none; border-radius:8px; cursor:pointer; width:100%; font-weight:bold; }
+
+#hugTip { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:30px 40px; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,.2); font-size:20px; font-weight:bold; color:#ff69b4; display:none; z-index:999999; white-space:nowrap; }
+@media(prefers-color-scheme:dark){ #hugTip{background:#222;color:#ff9ecf;} }
+
+#cdTip { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:30px 40px; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,.2); font-size:20px; font-weight:bold; color:#ff4444; display:none; z-index:999999; white-space:nowrap; }
+@media(prefers-color-scheme:dark){ #cdTip{background:#222;color:#ff6666;} }
+
+#nfcModal { position:fixed; inset:0; background:rgba(0,0,0,.65); display:none; justify-content:center; align-items:center; z-index:9999999; padding:20px; }
+.nfc-box { background:#fff; max-width:380px; width:100%; padding:28px; border-radius:16px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.3); }
+@media(prefers-color-scheme:dark){ .nfc-box{background:#1e1e2f;color:#fff;} }
+.nfc-title { font-size:18px; font-weight:bold; margin-bottom:16px; color:#e53e3e; }
+.nfc-desc { font-size:15px; line-height:1.6; margin-bottom:22px; }
+.nfc-pdd-btn { background:#e53e3e; animation:bounce 1.8s infinite, glow-red 1.5s infinite alternate; }
+.close-nfc { margin-top:12px; padding:9px 18px; background:#e2e8f0; color:#4a5568; border:none; border-radius:8px; cursor:pointer; width:100%; font-size:14px; }
 </style>
 </head>
 <body>
-<div id="box"></div>
+
+<div class="lang-switch">
+  <button class="lang-btn btn-cn active" id="btnCN">简</button>
+  <button class="lang-btn btn-tw" id="btnTW">繁</button>
+  <button class="lang-btn btn-en" id="btnEN">EN</button>
+</div>
+
+<div id="wifiSignal">
+  <div class="wifi-bar"></div>
+  <div class="wifi-bar"></div>
+  <div class="wifi-bar"></div>
+  <div class="wifi-bar"></div>
+</div>
+
+<div id="loader">
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+  <div class="loading-text">正在加载...</div>
+  <div id="donePopup">
+    <div class="done-title">加载完成！</div>
+    <div class="done-desc">欢迎来到灰冰的个人主页</div>
+    <button id="startBtn">进入</button>
+  </div>
+</div>
+
+<div class="card" id="card">
+  <div class="name" id="nameClick">灰冰</div>
+  <div class="title" id="roleText">小学生</div>
+
+  <div class="item" id="infoSecIntro">
+    <div class="label" id="aboutLabel">自我介绍</div>
+    <div class="intro-box">
+      <div class="intro-title" id="introHead">✨ 关于灰冰</div>
+      <div class="intro-text" id="infoDesc">
+        大家好，我是灰冰。入圈半年的福瑞，香港六年级小学生。有时社恐有时社牛，有自己的兽装。
+      </div>
+    </div>
+  </div>
+
+  <div class="item" id="infoSecNfc">
+    <div class="label" id="nfcLabel">NFC来源</div>
+    <div class="info" style="color:#e53e3e;cursor:pointer" id="openNfc">查看NFC使用说明</div>
+  </div>
+
+  <div class="item" id="infoSecSkill">
+    <div class="label" id="skillLabel">技能</div>
+    <div class="info" id="infoSkill">玩抽象 / 低情商 / 会复仇</div>
+  </div>
+
+  <div class="item" id="infoSecXiaohongshu">
+    <div class="label">小红书</div>
+    <div class="info">ID: 95118212301 </div>
+  </div>
+
+  <div class="item" id="infoSecPhone">
+    <div class="label">电话</div>
+    <div class="info">18944774556</div>
+  </div>
+
+  <div class="item" id="infoSecEmail">
+    <div class="label">邮箱</div>
+    <div class="info">ggcg1774@gmail.com</div>
+  </div>
+
+  <div class="item" id="infoSecWechatInfo">
+    <div class="label">微信</div>
+    <div class="info">San823016803</div>
+  </div>
+
+  <div class="item" id="infoSecQqInfo">
+    <div class="label">QQ</div>
+    <div class="info">2352145257</div>
+  </div>
+
+  <div class="item" id="infoSecSns">
+    <div class="label" id="snsLabel">社交媒体</div>
+    <div class="info" id="infoSns">微信、抖音、快手、B站、小红书、QQ</div>
+  </div>
+
+  <a class="btn qq" href="https://qm.qq.com/q/wEnQhLHW1w" target="_blank">🐾 加QQ</a>
+  <a class="btn douyin" href="https://v.douyin.com/Otl2speIq08/" target="_blank">🎬 我的抖音</a>
+  <a class="btn kuaishou" href="https://v.kuaishou.com/Jb6WKtca" target="_blank">🎥 我的快手</a>
+  <a class="btn xiaohongshu" href="https://xhslink.com/m/5086Efv0jbU" target="_blank">📕 我的小红书</a>
+  <button class="btn wechat" id="wechatBtn">💬 我的微信</button>
+  <a class="btn fursuit" href="https://fursuit.tv/@eerhev0" target="_blank">📺 兽装频道</a>
+
+  <!-- 新增的 Phigros 按钮 -->
+  <a class="btn phigros" href="https://mihoyo.wiki/Phigros/tapToStart/index.html" target="_blank">🎵 phigros网页版</a>
+
+  <a class="btn twitter" id="twitterBtn" href="https://x.com/ggcg281650" target="_blank" style="display:none;">🔗 我的推特</a>
+
+  <button class="btn log-btn" id="logBtn">📋 日志</button>
+</div>
+
+<div id="wechatModal">
+  <div class="wechat-card">
+    <h3>添加我的微信</h3>
+    <div class="wx-id" id="wxId">San823016803</div>
+    <button class="copy-btn" id="copyBtn">复制微信号</button>
+    <button class="close-wechat" id="closeWechat">关闭</button>
+  </div>
+</div>
+
+<div id="logPanel">
+  <div class="log-box">
+    <button id="easterBtn">!</button>
+    <h2>📋 更新日志</h2>
+    <p><strong>Version: 3.2</strong><br>Date: 2026-04-21</p>
+    <h3>✅ 新增功能</h3>
+    <ul>
+      <li>主简介添加 Phigros 网页版按钮（粉红色）</li>
+      <li>保留之前所有功能和修复</li>
+    </ul>
+    <button class="close-log">关闭</button>
+  </div>
+</div>
+
+<div id="nfcModal">
+  <div class="nfc-box">
+    <div class="nfc-title">NFC 使用说明</div>
+    <div class="nfc-desc">这个NFC为测试用途，使用手机APP进行读写、写入和删除。</div>
+    <a class="btn nfc-pdd-btn" href="https://mobile.yangkeduo.com/mall_page.html?ps=lx2qQgzDqZ" target="_blank">拼多多NFC店铺</a>
+    <button class="close-nfc" id="closeNfc">关闭</button>
+  </div>
+</div>
+
+<div id="boomEaster">💥</div>
+<div id="hugTip">🎉 灰冰的抱抱 ×1</div>
+<div id="cdTip">🚫 点击太快啦！</div>
 
 <script>
-const box = document.getElementById('box');
-// 超多鲜艳颜色
-const colors = [
-  '#ff3333','#ff9900','#ffff00','#00ff00',
-  '#00ffff','#3399ff','#9933ff','#ff33cc',
-  '#ff6600','#ff0066','#66ff66','#00ccff',
-  '#ff5555','#ffbb00','#77ff77','#ff77ff'
-];
+let currentLang = 'cn';
+let isSecret = false;
 
-function add(){
-  let div = document.createElement('div');
-  div.className = 'text';
-  // 随机颜色
-  let color = colors[Math.floor(Math.random()*colors.length)];
-  div.style.color = color;
-  div.textContent = '21是🔥货~';
-  box.appendChild(div);
-  // 自动滚到底
-  window.scrollTo(0,document.body.scrollHeight);
+const langPack = {
+  cn: {
+    name: "灰冰",
+    role: "小学生",
+    aboutLabel: "自我介绍",
+    introHead: "✨ 关于灰冰",
+    intro: "大家好，我是灰冰。入圈半年的福瑞，香港六年级小学生。有时社恐有时社牛，有自己的兽装。",
+    secretIntro: "嗨，我是🔞🈲的灰冰。可能是我心理出现了一点扭曲，所以你也不用听，你只要看简介就对了——呵呵呵，我是🔞禁的灰冰，是小型兽聚民宿的话...嘿嘿.. 还有晚上要是有小兽太和我共用一张床，我有概率使用神秘服务🅰️🅾️🅰️嘿嘿嘿~⚠︎",
+    secretSkill: "免费服务 / 帮你热床 / 帮你导 / xst? ",
+    secretSns: "推特",
+    skillLabel: "技能",
+    skill: "玩抽象 / 低情商 / 会复仇",
+    snsLabel: "社交媒体",
+    sns: "微信、抖音、快手、B站、小红书、QQ",
+    nfcLabel: "NFC商店来源",
+    loading: "正在加载...",
+    loaded: "加载完成！",
+    welcome: "欢迎来到灰冰的个人主页",
+    enter: "进入",
+    nfcGuide: "查看 NFC 使用说明",
+    logs: "📋 日志",
+    addQQ: "🐾 加我QQ",
+    myDouyin: "🎬 我的抖音",
+    myKuaishou: "🎥 我的快手",
+    myXiaohongshu: "📕 我的小红书",
+    myWechat: "💬 我的微信",
+    fursuitChannel: "📺 兽装频道",
+    phigrosBtn: "🎵 phigros网页版",
+    myTwitter: "🔗 我的推特",
+    addWechat: "添加我的微信",
+    copyID: "复制微信号",
+    close: "关闭",
+    hug: "🎉 灰冰的抱抱 ×",
+    tooFast: "🚫 点击太快啦！",
+    nfcTitle: "NFC 使用说明",
+    nfcDesc: "这个NFC为测试用途，使用手机APP进行读写、写入和删除。",
+    nfcShop: "拼多多NFC店铺"
+  },
+  tw: {
+    name: "灰冰",
+    role: "小學生",
+    aboutLabel: "自我介紹",
+    introHead: "✨ 關於灰冰",
+    intro: "大家好，我是灰冰。入圈半年的福瑞，香港六年級小學生。有時社恐有時社牛，有自己的獸裝。",
+    secretIntro: "嗨，我是🔞🈲的灰冰。 可能是我心理出現了一點扭曲，所以你也不用聽，你只要看簡介就對了——呵呵呵，我是🔞禁的灰冰，是小型獸聚民宿的話...嘿嘿.. 還有晚上要是有小獸太和我共用一張床，我有概率使用神秘服務🅰️🅾️🅰️嘿嘿嘿~⚠",
+    secretSkill: "免费服务 / 帮你热床 / 帮你导 / xst?",
+    secretSns: "推特",
+    skillLabel: "技能",
+    skill: "玩抽象 / 低情商 / 會復仇",
+    snsLabel: "社群媒體",
+    sns: "微信、抖音、快手、B站、小紅書、QQ",
+    nfcLabel: "NFC商店來源",
+    loading: "正在載入...",
+    loaded: "載入完成！",
+    welcome: "歡迎來到灰冰的個人主頁",
+    enter: "進入",
+    nfcGuide: "檢視 NFC 使用說明",
+    logs: "📋 紀錄",
+    addQQ: "🐾 加我QQ",
+    myDouyin: "🎬 我的抖音",
+    myKuaishou: "🎥 我的快手",
+    myXiaohongshu: "📕 我的小紅書",
+    myWechat: "💬 我的微信",
+    fursuitChannel: "📺 獸裝頻道",
+    phigrosBtn: "🎵 phigros網頁版",
+    myTwitter: "🔗 我的推特",
+    addWechat: "加入我的微信",
+    copyID: "複製微信號",
+    close: "關閉",
+    hug: "🎉 灰冰的抱抱 ×",
+    tooFast: "🚫 點擊太快囉！",
+    nfcTitle: "NFC 使用說明",
+    nfcDesc: "這個NFC為測試用途，使用手機APP進行讀寫、寫入和刪除。",
+    nfcShop: "拼多多NFC商店"
+  },
+  en: {
+    name: "GrayIce",
+    role: "Primary Student",
+    aboutLabel: "About Me",
+    introHead: "✨ About GrayIce",
+    intro: "Hello everyone, I'm GrayIce. I'm a furry for half a year. I'm a Primary 6 student in Hong Kong. Sometimes shy, sometimes outgoing, and I have my own fursuit.",
+    secretIntro: "Hi, I'm 🔞🈲's Grey Ice. Maybe I've developed a little psychological twist, so you don't need to listen to anything, just read the introduction—hehehe, I'm 🔞's Grey Ice, and if it's a small animal-themed guesthouse...hehe... Also, if any little animal lovers share a bed with me at night, there's a chance I might use a mystery service 🅰️🅾️🅰️hehehe~⚠︎",
+    secretSkill: "Free services / help you warm up your bed / help you guide / xst?",
+    secretSns: "Twitter",
+    skillLabel: "Skills",
+    skill: "Funny / Low EQ / Revenge",
+    snsLabel: "Social Media",
+    sns: "WeChat, Douyin, Kuaishou, Bilibili, Xiaohongshu, QQ",
+    nfcLabel: "NFC Shop",
+    loading: "Loading...",
+    loaded: "Loaded!",
+    welcome: "Welcome to GrayIce's profile",
+    enter: "Enter",
+    nfcGuide: "View NFC Guide",
+    logs: "📋 Logs",
+    addQQ: "🐾 Add me on QQ",
+    myDouyin: "🎬 My Douyin",
+    myKuaishou: "🎥 My Kuaishou",
+    myXiaohongshu: "📕 My Xiaohongshu",
+    myWechat: "💬 My WeChat",
+    fursuitChannel: "📺 Fursuit Channel",
+    phigrosBtn: "🎵 Phigros Web",
+    myTwitter: "🔗 My Twitter",
+    addWechat: "Add Me on WeChat",
+    copyID: "Copy ID",
+    close: "Close",
+    hug: "🎉 Hug from GrayIce ×",
+    tooFast: "🚫 Too fast!",
+    nfcTitle: "NFC Guide",
+    nfcDesc: "This NFC is experimental. Use app to read, write and delete.",
+    nfcShop: "Pinduoduo NFC Shop"
+  }
+};
+
+function switchLanguage(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`btn${lang.toUpperCase()}`).classList.add('active');
+  const card = document.getElementById('card');
+  const isSecretMode = isSecret && card.classList.contains('secret-mode');
+  const t = langPack[lang];
+
+  document.getElementById('nameClick').innerText = isSecretMode ? `${t.name}?` : t.name;
+  document.getElementById('roleText').innerText = isSecretMode ? '' : t.role;
+  document.getElementById('aboutLabel').innerText = t.aboutLabel;
+  document.getElementById('introHead').innerText = t.introHead;
+  document.getElementById('infoDesc').innerText = isSecretMode ? t.secretIntro : t.intro;
+  document.getElementById('skillLabel').innerText = t.skillLabel;
+  document.getElementById('infoSkill').innerText = isSecretMode ? t.secretSkill : t.skill;
+  document.getElementById('snsLabel').innerText = t.snsLabel;
+  document.getElementById('infoSns').innerText = isSecretMode ? t.secretSns : t.sns;
+  document.getElementById('nfcLabel').innerText = t.nfcLabel;
+
+  document.querySelector('.loading-text').innerText = t.loading;
+  document.querySelector('.done-title').innerText = t.loaded;
+  document.querySelector('.done-desc').innerText = t.welcome;
+  document.getElementById('startBtn').innerText = t.enter;
+  document.getElementById('openNfc').innerText = t.nfcGuide;
+  document.getElementById('logBtn').innerText = t.logs;
+  document.querySelector('.qq').innerText = t.addQQ;
+  document.querySelector('.douyin').innerText = t.myDouyin;
+  document.querySelector('.kuaishou').innerText = t.myKuaishou;
+  document.querySelector('.xiaohongshu').innerText = t.myXiaohongshu;
+  document.querySelector('.wechat').innerText = t.myWechat;
+  document.querySelector('.fursuit').innerText = t.fursuitChannel;
+  document.querySelector('.phigros').innerText = t.phigrosBtn;
+  document.querySelector('.twitter').innerText = t.myTwitter;
+  document.querySelector('.wechat-card h3').innerText = t.addWechat;
+  document.getElementById('copyBtn').innerText = t.copyID;
+  document.getElementById('closeWechat').innerText = t.close;
+  document.querySelector('.close-log').innerText = t.close;
+  document.getElementById('closeNfc').innerText = t.close;
+  document.getElementById('hugTip').innerText = t.hug + '1';
+  document.getElementById('cdTip').innerText = t.tooFast;
+  document.querySelector('.nfc-title').innerText = t.nfcTitle;
+  document.querySelector('.nfc-desc').innerText = t.nfcDesc;
+  document.querySelector('.nfc-pdd-btn').innerText = t.nfcShop;
 }
 
-// 超快刷屏
-setInterval(add, 30);
+document.getElementById('btnCN').onclick = () => switchLanguage('cn');
+document.getElementById('btnTW').onclick = () => switchLanguage('tw');
+document.getElementById('btnEN').onclick = () => switchLanguage('en');
+
+const startBtn = document.getElementById('startBtn');
+const loader = document.getElementById('loader');
+const card = document.getElementById('card');
+startBtn.addEventListener('click', () => {
+  loader.style.display = 'none';
+  card.classList.add('show');
+});
+
+const logPanel = document.getElementById('logPanel');
+const logBtn = document.getElementById('logBtn');
+const closeLog = document.querySelector('.close-log');
+document.addEventListener('keydown', (e) => {
+  if(e.key.toLowerCase() === 'l') logPanel.style.display = 'flex';
+  if(e.key === 'Escape') logPanel.style.display = 'none';
+});
+logBtn.onclick = () => logPanel.style.display = 'flex';
+closeLog.onclick = () => logPanel.style.display = 'none';
+logPanel.onclick = (e) => {
+  if(e.target === logPanel) logPanel.style.display = 'none';
+};
+
+const wechatBtn = document.getElementById('wechatBtn');
+const wechatModal = document.getElementById('wechatModal');
+const closeWechat = document.getElementById('closeWechat');
+const copyBtn = document.getElementById('copyBtn');
+const wxId = document.getElementById('wxId').innerText;
+wechatBtn.onclick = () => wechatModal.style.display = 'flex';
+closeWechat.onclick = () => wechatModal.style.display = 'none';
+wechatModal.onclick = (e) => {
+  if(e.target === wechatModal) wechatModal.style.display = 'none';
+};
+copyBtn.onclick = () => {
+  navigator.clipboard.writeText(wxId).then(() => {
+    alert(langPack[currentLang].copyID + '成功！');
+  });
+};
+
+const nameClick = document.getElementById('nameClick');
+const hugTip = document.getElementById('hugTip');
+const cdTip = document.getElementById('cdTip');
+let hugCount = 0;
+let lastClick = 0;
+const CD = 50;
+nameClick.addEventListener('click', () => {
+  const now = Date.now();
+  if (now - lastClick < CD) {
+    cdTip.style.display = 'block';
+    setTimeout(() => cdTip.style.display = 'none', 1000);
+    return;
+  }
+  lastClick = now;
+  hugCount++;
+  hugTip.textContent = langPack[currentLang].hug + hugCount;
+  hugTip.style.display = 'block';
+  setTimeout(() => hugTip.style.display = 'none', 1200);
+});
+
+const openNfc = document.getElementById('openNfc');
+const nfcModal = document.getElementById('nfcModal');
+const closeNfc = document.getElementById('closeNfc');
+openNfc.onclick = () => nfcModal.style.display = 'flex';
+closeNfc.onclick = () => nfcModal.style.display = 'none';
+nfcModal.onclick = (e) => {
+  if(e.target === nfcModal) nfcModal.style.display = 'none';
+};
+
+const easterBtn = document.getElementById('easterBtn');
+const boomEaster = document.getElementById('boomEaster');
+const nameEl = document.getElementById('nameClick');
+const titleEl = document.getElementById('roleText');
+const infoDescEl = document.getElementById('infoDesc');
+const infoSkillEl = document.getElementById('infoSkill');
+const infoSnsEl = document.getElementById('infoSns');
+const twitterBtn = document.getElementById('twitterBtn');
+const phigrosBtn = document.querySelector('.phigros');
+const hideInSecret = [
+  '#infoSecQqInfo','#infoSecWechatInfo','#infoSecPhone','#infoSecEmail','#infoSecXiaohongshu','#infoSecNfc'
+];
+let boomCount = 0;
+
+easterBtn.addEventListener('click', () => {
+  boomEaster.style.display = 'block';
+  setTimeout(() => {
+    boomEaster.style.display = 'none';
+  }, 800);
+  boomCount++;
+  if (boomCount >= 5) {
+    boomCount = 0;
+    isSecret = !isSecret;
+    logPanel.style.display = 'none';
+    loader.style.display = 'flex';
+    document.querySelector('.loading-text').innerText = langPack[currentLang].loading;
+    setTimeout(() => {
+      loader.style.display = 'none';
+      const t = langPack[currentLang];
+      card.classList.toggle('secret-mode', isSecret);
+      nameEl.innerText = isSecret ? `${t.name}?` : t.name;
+      titleEl.innerText = isSecret ? '' : t.role;
+      infoDescEl.innerText = isSecret ? t.secretIntro : t.intro;
+      infoSkillEl.innerText = isSecret ? t.secretSkill : t.skill;
+      infoSnsEl.innerText = isSecret ? t.secretSns : t.sns;
+
+      hideInSecret.forEach(sel => document.querySelector(sel).style.display = isSecret ? 'none' : 'block');
+      document.querySelectorAll('.btn:not(.log-btn):not(.twitter)').forEach(btn => btn.style.display = isSecret ? 'none' : 'block');
+      twitterBtn.style.display = isSecret ? 'block' : 'none';
+    }, 1500);
+  }
+});
 </script>
 </body>
 </html>
